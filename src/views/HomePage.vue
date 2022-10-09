@@ -16,9 +16,14 @@
                   </div>
                   <div class="facilityListR">
                     <div class="text">设备数量</div>
-                    <span class="num">{{
+                    <countTo
+                      :startVal="0"
+                      :endVal="deviceStatistic.deviceCount"
+                      :duration="3000"
+                    ></countTo>
+                    <!-- <span class="num">{{
                       deviceStatistic.deviceCount | format
-                    }}</span>
+                    }}</span> -->
                   </div>
                 </div>
               </el-col>
@@ -29,9 +34,15 @@
                   </div>
                   <div class="facilityListR">
                     <div class="text">检测数据</div>
-                    <span class="num">{{
+                    <countTo
+                      :startVal="0"
+                      :endVal="deviceStatistic.monitorCount"
+                      :duration="3000"
+                    ></countTo>
+
+                    <!-- <span class="num">{{
                       deviceStatistic.monitorCount | format
-                    }}</span>
+                    }}</span> -->
                   </div>
                 </div>
               </el-col>
@@ -42,9 +53,15 @@
                   </div>
                   <div class="facilityListR">
                     <div class="text">产品数量</div>
-                    <span class="num">{{
+                    <countTo
+                      :startVal="0"
+                      :endVal="deviceStatistic.productCount"
+                      :duration="3000"
+                    ></countTo>
+
+                    <!-- <span class="num">{{
                       deviceStatistic.productCount | format
-                    }}</span>
+                    }}</span> -->
                   </div>
                 </div>
               </el-col>
@@ -55,9 +72,15 @@
                   </div>
                   <div class="facilityListR">
                     <div class="text">告警数量</div>
-                    <span class="num">{{
+                    <countTo
+                      :startVal="0"
+                      :endVal="deviceStatistic.alertCount"
+                      :duration="3000"
+                    ></countTo>
+
+                    <!-- <span class="num">{{
                       deviceStatistic.alertCount | format
-                    }}</span>
+                    }}</span> -->
                   </div>
                 </div>
               </el-col>
@@ -68,9 +91,14 @@
                   </div>
                   <div class="facilityListR">
                     <div class="text">操作记录</div>
-                    <span class="num">
+                    <countTo
+                      :startVal="0"
+                      :endVal=" deviceStatistic.functionCount"
+                      :duration="3000"
+                    ></countTo>
+                    <!-- <span class="num">
                       {{ deviceStatistic.functionCount | format }}</span
-                    >
+                    > -->
                   </div>
                 </div>
               </el-col>
@@ -81,9 +109,14 @@
                   </div>
                   <div class="facilityListR">
                     <div class="text">上报事件</div>
-                    <span class="num">{{
+                    <countTo
+                      :startVal="0"
+                      :endVal=" deviceStatistic.eventCount"
+                      :duration="3000"
+                    ></countTo>
+                    <!-- <span class="num">{{
                       deviceStatistic.eventCount | format
-                    }}</span>
+                    }}</span> -->
                   </div>
                 </div>
               </el-col>
@@ -124,9 +157,14 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">发送字节</div>
-                  <span class="num">{{
+                  <countTo
+                      :startVal="0"
+                      :endVal=" MetriceList['bytes.sent'] "
+                      :duration="3000"
+                    ></countTo>
+                  <!-- <span class="num">{{
                     MetriceList["bytes.sent"] | format
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
             </el-col>
@@ -137,9 +175,14 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">接收字节</div>
-                  <span class="num">{{
+                  <countTo
+                      :startVal="0"
+                      :endVal=" MetriceList['bytes.received']"
+                      :duration="3000"
+                    ></countTo>
+                  <!-- <span class="num">{{
                     MetriceList["bytes.received"] | format
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
             </el-col>
@@ -150,9 +193,14 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">认证次数</div>
-                  <span class="num">{{
+                  <countTo
+                      :startVal="0"
+                      :endVal=" MetriceList['client.authenticate']"
+                      :duration="3000"
+                    ></countTo>
+                  <!-- <span class="num">{{
                     MetriceList["client.authenticate"] | format
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
             </el-col>
@@ -163,9 +211,14 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">连接次数</div>
-                  <span class="num">{{
+                  <countTo
+                      :startVal="0"
+                      :endVal=" MetriceList['client.auth.success']"
+                      :duration="3000"
+                    ></countTo>
+                  <!-- <span class="num">{{
                     MetriceList["client.auth.success"] | format
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
             </el-col>
@@ -176,9 +229,14 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">订阅次数</div>
-                  <span class="num">{{
+                  <countTo
+                      :startVal="0"
+                      :endVal=" MetriceList['client.subscribe']"
+                      :duration="3000"
+                    ></countTo>
+                  <!-- <span class="num">{{
                     MetriceList["client.subscribe"] | format
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
             </el-col>
@@ -189,9 +247,14 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">接收消息</div>
-                  <span class="num">{{
+                  <countTo
+                      :startVal="0"
+                      :endVal="  MetriceList['messages.received']"
+                      :duration="3000"
+                    ></countTo>
+                  <!-- <span class="num">{{
                     MetriceList["messages.received"] | format
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
             </el-col>
@@ -284,7 +347,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-
+import countTo from "vue-count-to";
 import * as echarts from "echarts";
 import { loadBMap } from "../assets/map";
 //ECharts的百度地图扩展，可以在百度地图上展现点图，线图，热力图等可视化
@@ -292,6 +355,9 @@ require("echarts/extension/bmap/bmap");
 import _ from "../assets/utils";
 export default {
   name: "HomePage",
+  components: {
+    countTo,
+  },
   data() {
     return {
       //设备统计
@@ -339,7 +405,7 @@ export default {
     this.loadMap();
   },
   created() {
-    this.getInfo()
+    this.getInfo();
     this.StatisticsInit();
     this.NoticeInit();
     this.MetriceInit();
@@ -347,19 +413,19 @@ export default {
     this.ServerInit();
     this.DeviceInit();
   },
-    computed:{
-    ...mapState(["avatarUrl"])
+  computed: {
+    ...mapState(["avatarUrl"]),
   },
   methods: {
     ...mapMutations(["setAvatarUrl"]),
-    async getInfo(){
-      let {code,user} = await this.$api.getInfo()
-      if(+code!==200){
-        this.$message.error("网络错误，请稍后重试")
+    async getInfo() {
+      let { code, user } = await this.$api.getInfo();
+      if (+code !== 200) {
+        this.$message.error("网络错误，请稍后重试");
         return;
       }
-      let {avatar} = user;
-      this.setAvatarUrl(avatar)
+      let { avatar } = user;
+      this.setAvatarUrl(avatar);
     },
     //加载地图
     loadMap() {
@@ -1195,5 +1261,11 @@ export default {
   border-radius: 10px;
   padding: 15px;
   margin-top: 10px;
+}
+
+.facilityListR{
+  span{
+    font-size: 18px;
+  }
 }
 </style>
