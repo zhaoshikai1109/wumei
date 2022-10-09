@@ -93,7 +93,7 @@
                     <div class="text">操作记录</div>
                     <countTo
                       :startVal="0"
-                      :endVal=" deviceStatistic.functionCount"
+                      :endVal="deviceStatistic.functionCount"
                       :duration="3000"
                     ></countTo>
                     <!-- <span class="num">
@@ -111,7 +111,7 @@
                     <div class="text">上报事件</div>
                     <countTo
                       :startVal="0"
-                      :endVal=" deviceStatistic.eventCount"
+                      :endVal="deviceStatistic.eventCount"
                       :duration="3000"
                     ></countTo>
                     <!-- <span class="num">{{
@@ -158,10 +158,10 @@
                 <div class="facilityListR">
                   <div class="text">发送字节</div>
                   <countTo
-                      :startVal="0"
-                      :endVal=" MetriceList['bytes.sent'] "
-                      :duration="3000"
-                    ></countTo>
+                    :startVal="0"
+                    :endVal="MetriceList['bytes.sent']"
+                    :duration="3000"
+                  ></countTo>
                   <!-- <span class="num">{{
                     MetriceList["bytes.sent"] | format
                   }}</span> -->
@@ -176,10 +176,10 @@
                 <div class="facilityListR">
                   <div class="text">接收字节</div>
                   <countTo
-                      :startVal="0"
-                      :endVal=" MetriceList['bytes.received']"
-                      :duration="3000"
-                    ></countTo>
+                    :startVal="0"
+                    :endVal="MetriceList['bytes.received']"
+                    :duration="3000"
+                  ></countTo>
                   <!-- <span class="num">{{
                     MetriceList["bytes.received"] | format
                   }}</span> -->
@@ -194,10 +194,10 @@
                 <div class="facilityListR">
                   <div class="text">认证次数</div>
                   <countTo
-                      :startVal="0"
-                      :endVal=" MetriceList['client.authenticate']"
-                      :duration="3000"
-                    ></countTo>
+                    :startVal="0"
+                    :endVal="MetriceList['client.authenticate']"
+                    :duration="3000"
+                  ></countTo>
                   <!-- <span class="num">{{
                     MetriceList["client.authenticate"] | format
                   }}</span> -->
@@ -212,10 +212,10 @@
                 <div class="facilityListR">
                   <div class="text">连接次数</div>
                   <countTo
-                      :startVal="0"
-                      :endVal=" MetriceList['client.auth.success']"
-                      :duration="3000"
-                    ></countTo>
+                    :startVal="0"
+                    :endVal="MetriceList['client.auth.success']"
+                    :duration="3000"
+                  ></countTo>
                   <!-- <span class="num">{{
                     MetriceList["client.auth.success"] | format
                   }}</span> -->
@@ -230,10 +230,10 @@
                 <div class="facilityListR">
                   <div class="text">订阅次数</div>
                   <countTo
-                      :startVal="0"
-                      :endVal=" MetriceList['client.subscribe']"
-                      :duration="3000"
-                    ></countTo>
+                    :startVal="0"
+                    :endVal="MetriceList['client.subscribe']"
+                    :duration="3000"
+                  ></countTo>
                   <!-- <span class="num">{{
                     MetriceList["client.subscribe"] | format
                   }}</span> -->
@@ -248,10 +248,10 @@
                 <div class="facilityListR">
                   <div class="text">接收消息</div>
                   <countTo
-                      :startVal="0"
-                      :endVal="  MetriceList['messages.received']"
-                      :duration="3000"
-                    ></countTo>
+                    :startVal="0"
+                    :endVal="MetriceList['messages.received']"
+                    :duration="3000"
+                  ></countTo>
                   <!-- <span class="num">{{
                     MetriceList["messages.received"] | format
                   }}</span> -->
@@ -1263,8 +1263,8 @@ export default {
   margin-top: 10px;
 }
 
-.facilityListR{
-  span{
+.facilityListR {
+  span {
     font-size: 18px;
   }
 }
