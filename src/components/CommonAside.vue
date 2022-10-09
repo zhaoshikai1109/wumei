@@ -55,11 +55,12 @@
       <el-menu-item index="/system/post">岗位管理</el-menu-item>
       <el-menu-item index="/system/dict">字典管理</el-menu-item>
     </el-submenu> -->
-    <template v-for="item1 in navList">
+    <template v-for="item1 in navList" >
       <el-submenu
         :key="item1.path"
         :index="`/${item1.path}`"
         v-if="item1.path !== '' && item1.children"
+        v-permission="item1.meta.role"
       >
         <template slot="title">
           <i :class="item1.meta.icon"></i>
@@ -67,15 +68,18 @@
         </template>
 
         <el-menu-item
-          v-for="item2 in item1.children"
+          v-for="item2 in item1.children.filter((item) => {
+            return !item.meta.hidden;
+          })"
           :key="item2.path"
           :index="`/${item1.path}/${item2.path}`"
+          v-permission="item2.meta.role"
         >
           {{ item2.meta.title }}
         </el-menu-item>
       </el-submenu>
       <el-menu-item
-        v-else-if="item1.path !== ''"
+        v-else-if="item1.path !== '' && !item1.meta.hidden"
         :index="`/${item1.path}`"
         :key="item1.path"
       >
@@ -107,9 +111,9 @@ export default {
     ...mapState(["isCollapse"]),
   },
   created() {
-    console.log(this.$router.getRoutes());
-    console.log(this.$route);
-    console.log(this.navList);
+    console.log(this.$router);
+    // console.log(this.$route);
+    // console.log(this.navList);
 
     this.navList = this.$router.options.routes[0].children;
     this.defaultActive = this.$route.path;
@@ -169,6 +173,7 @@ h3 {
   align-items: center;
   height: 50px;
   margin: 0 10px;
+  white-space: nowrap;
   img {
     width: 32px;
     height: 32px;

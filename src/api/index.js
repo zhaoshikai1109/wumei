@@ -1,6 +1,6 @@
 import http from "./http";
 import template from "./template";
-
+import system from "./system";
 //登录
 const login = (code, password, username, uuid) => {
   return http.post("/prod-api/login", {
@@ -31,6 +31,23 @@ const register = (code, username, phone, password, confirmPassword, uuid) => {
 //获取登陆者信息
 const getInfo = () => {
   return http.get("/prod-api/getInfo");
+};
+
+//个人中心获取账号信息
+const getProfileInfo = () => {
+  return http.get("/prod-api/system/user/profile");
+};
+
+//修改个人中心用户信息
+const updateUserProfile = (data) => {
+  return http.put("/prod-api/system/user/profile", data);
+};
+//修改个人中心密码
+const updatePassword = (oldPassword, newPassword) => {
+  return http.put("/prod-api/system/user/profile/updatePwd", {
+    oldPassword,
+    newPassword,
+  });
 };
 
 //获取地图数据
@@ -66,16 +83,37 @@ const getMonitorServer = () => {
 const getDeviceAll = () => {
   return http.get("/prod-api/iot/device/all");
 };
+
+//EMQ客户端数据
+const getClientsList = (params) => {
+  return http.get("/api/v4/clients", { params });
+};
+//EMQ客户端详细信息
+const getClientsInfo = (clientid) => {
+  return http.get(`/api/v4/clients/${clientid}`);
+};
+
+//EMQ客户端订阅列表详细信息
+const getSubscriptionsInfo = (clientid) => {
+  return http.get(`/api/v4/subscriptions/${clientid}`);
+};
 export default {
   login,
   captchaImage,
   register,
   getInfo,
+  getProfileInfo,
+  updateUserProfile,
+  updatePassword,
   getDeviceStatisticList,
   getNoticeList,
   getMetriceList,
   getstatsList,
+  getSubscriptionsInfo,
   getMonitorServer,
   getDeviceAll,
+  getClientsList,
+  getClientsInfo,
   template,
+  system,
 };

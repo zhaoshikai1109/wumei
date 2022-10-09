@@ -13,6 +13,8 @@ export default new Vuex.Store({
     editableTabs: [{ title: "首页", path: "/home" }], //tab
     editableTabsValue: "0", //当前选中tab
     profile: null, //登录者信息
+    permission: [], //权限
+    avatarUrl: "",
   },
   mutations: {
     collapseMenu(state) {
@@ -20,6 +22,9 @@ export default new Vuex.Store({
     },
     setProfile(state, payload) {
       state.profile = payload;
+    },
+    setpermission(state, payload) {
+      state.permission = payload;
     },
     addTabs(state, { title, path }) {
       console.log(title, path);
@@ -35,6 +40,9 @@ export default new Vuex.Store({
         (tab) => tab.path !== targetName
       );
     },
+    setAvatarUrl(state, url) {
+      state.avatarUrl = url;
+    },
   },
 
   actions: {
@@ -45,6 +53,7 @@ export default new Vuex.Store({
         result = await api.getInfo();
         if (+result.code !== 200) result.user = null;
         commit("setProfile", result.user);
+        commit("setpermission", result.permissions);
       } catch (error) {
         console.log(error);
       }

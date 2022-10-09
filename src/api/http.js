@@ -25,6 +25,9 @@ http.interceptors.request.use(
     if (token && config.url !== "/adminUser/login") {
       config.headers["Authorization"] = token;
     }
+    if(config.url.includes("/api/v4")){
+      config.headers["Authorization"] = "Basic YWRtaW46cHVibGlj";
+    }
 
     return config;
   },

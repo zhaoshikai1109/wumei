@@ -112,7 +112,7 @@
         </div>
       </el-col>
     </el-row>
-    <el-row class="homepageBottom">
+    <el-row class="homepageBottom" v-permission="'monitor:druid:list'">
       <el-col :span="7" class="homepageBottomLeft">
         <div class="facility">
           <el-row class="rightRow">
@@ -124,7 +124,9 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">发送字节</div>
-                  <span class="num">{{ 522756637 | format }}</span>
+                  <span class="num">{{
+                    MetriceList["bytes.sent"] | format
+                  }}</span>
                 </div>
               </div>
             </el-col>
@@ -135,7 +137,9 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">接收字节</div>
-                  <span class="num">{{ 673240711 | format }}</span>
+                  <span class="num">{{
+                    MetriceList["bytes.received"] | format
+                  }}</span>
                 </div>
               </div>
             </el-col>
@@ -146,7 +150,9 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">认证次数</div>
-                  <span class="num">{{ 591924 | format }}</span>
+                  <span class="num">{{
+                    MetriceList["client.authenticate"] | format
+                  }}</span>
                 </div>
               </div>
             </el-col>
@@ -157,7 +163,9 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">连接次数</div>
-                  <span class="num">{{ 588540 | format }}</span>
+                  <span class="num">{{
+                    MetriceList["client.auth.success"] | format
+                  }}</span>
                 </div>
               </div>
             </el-col>
@@ -168,7 +176,9 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">订阅次数</div>
-                  <span class="num">{{ 569401 | format }}</span>
+                  <span class="num">{{
+                    MetriceList["client.subscribe"] | format
+                  }}</span>
                 </div>
               </div>
             </el-col>
@@ -179,7 +189,9 @@
                 </div>
                 <div class="facilityListR">
                   <div class="text">接收消息</div>
-                  <span class="num">{{ 723984 | format }}</span>
+                  <span class="num">{{
+                    MetriceList["messages.received"] | format
+                  }}</span>
                 </div>
               </div>
             </el-col>
@@ -254,7 +266,7 @@
       :visible="visible"
       width="50%"
       :before-close="closeDialog"
-      destroy-on-close="true"
+      :destroy-on-close="true"
     >
       <el-tag
         size="mini"
@@ -271,6 +283,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+
 import * as echarts from "echarts";
 import { loadBMap } from "../assets/map";
 //ECharts的百度地图扩展，可以在百度地图上展现点图，线图，热力图等可视化
@@ -286,6 +300,8 @@ export default {
       NoticeList: [],
       //Mqtt统计
       MetriceList: {},
+      //Mqtt状态
+      StatsList: {},
       //表格数据
       ServerList: {
         jvm: {
@@ -318,17 +334,325 @@ export default {
       visible: false,
     };
   },
-  // mounted(){
-  //   this.MqttInit();
-  // },
+  mounted() {
+    // this.MqttInit();
+    this.loadMap();
+  },
   created() {
+    this.getInfo()
     this.StatisticsInit();
     this.NoticeInit();
-    // this.MetriceInit();
+    this.MetriceInit();
+    this.DescriptionsInit();
     this.ServerInit();
     this.DeviceInit();
   },
+    computed:{
+    ...mapState(["avatarUrl"])
+  },
   methods: {
+    ...mapMutations(["setAvatarUrl"]),
+    async getInfo(){
+      let {code,user} = await this.$api.getInfo()
+      if(+code!==200){
+        this.$message.error("网络错误，请稍后重试")
+        return;
+      }
+      let {avatar} = user;
+      this.setAvatarUrl(avatar)
+    },
+    //加载地图
+    loadMap() {
+      this.$nextTick(() => {
+        loadBMap().then(() => {
+          this.getmap();
+        });
+      });
+    },
+    //地图
+    getmap() {
+      var myChart = echarts.init(this.$refs.map);
+      var option;
+
+      // 单击事件
+      // myChart.on('click', (params) => {
+      //     if (params.data.deviceId) {
+      //         this.$router.push({
+      //             path: '/iot/device-edit',
+      //             query: {
+      //                 t: Date.now(),
+      //                 deviceId: params.data.deviceId,
+      //             }
+      //         });
+      //     }
+      // });
+
+      // 格式化数据
+      let convertData = function (data, status) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+          var geoCoord = [data[i].longitude, data[i].latitude];
+          if (geoCoord && data[i].status == status) {
+            res.push({
+              name: data[i].deviceName,
+              value: geoCoord,
+              serialNumber: data[i].serialNumber,
+              status: data[i].status,
+              isShadow: data[i].isShadow,
+              firmwareVersion: data[i].firmwareVersion,
+              networkAddress: data[i].networkAddress,
+              productName: data[i].productName,
+              activeTime: data[i].activeTime == null ? "" : data[i].activeTime,
+              deviceId: data[i].deviceId,
+              serialNumber: data[i].serialNumber,
+              locationWay: data[i].locationWay,
+            });
+          }
+        }
+        return res;
+      };
+      option = {
+        title: {
+          text:
+            "设备分布（在线数 " +
+            this.deviceList.filter((x) => x.status == 3).length +
+            "）",
+          subtext: "wumei-smart open source living iot platform",
+          sublink: "https://iot.wumei.live",
+          target: "_blank",
+          textStyle: {
+            color: "#333",
+            textBorderColor: "#fff",
+            textBorderWidth: 10,
+          },
+          top: 10,
+          left: "center",
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: function (params) {
+            var htmlStr = '<div style="padding:5px;line-height:28px;">';
+            htmlStr +=
+              "设备名称： <span style='color:#409EFF'>" +
+              params.data.name +
+              "</span><br />";
+            htmlStr += "设备编号： " + params.data.serialNumber + "<br />";
+            htmlStr += "设备状态： ";
+            if (params.data.status == 1) {
+              htmlStr += "<span style='color:#E6A23C'>未激活</span>" + "<br />";
+            } else if (params.data.status == 2) {
+              htmlStr += "<span style='color:#F56C6C'>禁用</span>" + "<br />";
+            } else if (params.data.status == 3) {
+              htmlStr += "<span style='color:#67C23A'>在线</span>" + "<br />";
+            } else if (params.data.status == 4) {
+              htmlStr += "<span style='color:#909399'>离线</span>" + "<br />";
+            }
+            if (params.data.isShadow == 1) {
+              htmlStr +=
+                "设备影子： " +
+                "<span style='color:#67C23A'>启用</span>" +
+                "<br />";
+            } else {
+              htmlStr +=
+                "设备影子： " +
+                "<span style='color:#909399'>未启用</span>" +
+                "<br />";
+            }
+            htmlStr += "产品名称： " + params.data.productName + "<br />";
+            htmlStr +=
+              "固件版本： Version " + params.data.firmwareVersion + "<br />";
+            htmlStr += "激活时间： " + params.data.activeTime + "<br />";
+            htmlStr += "定位方式： ";
+            if (params.data.locationWay == 1) {
+              htmlStr += "自动定位" + "<br />";
+            } else if (params.data.locationWay == 2) {
+              htmlStr += "设备定位" + "<br />";
+            } else if (params.data.locationWay == 3) {
+              htmlStr += "自定义位置" + "<br />";
+            } else {
+              htmlStr += "未知" + "<br />";
+            }
+            htmlStr += "所在地址： " + params.data.networkAddress + "<br />";
+            htmlStr += "</div>";
+            return htmlStr;
+          },
+        },
+        bmap: {
+          center: [133, 38],
+          zoom: 5,
+          roam: true,
+          mapStyle: {
+            styleJson: [
+              {
+                featureType: "water",
+                elementType: "all",
+                stylers: {
+                  color: "#a0cfff",
+                },
+              },
+              {
+                featureType: "land",
+                elementType: "all",
+                stylers: {
+                  color: "#fafafa", // #fffff8 淡黄色
+                },
+              },
+              {
+                featureType: "railway",
+                elementType: "all",
+                stylers: {
+                  visibility: "off",
+                },
+              },
+              {
+                featureType: "highway",
+                elementType: "all",
+                stylers: {
+                  color: "#fdfdfd",
+                },
+              },
+              {
+                featureType: "highway",
+                elementType: "labels",
+                stylers: {
+                  visibility: "off",
+                },
+              },
+              {
+                featureType: "arterial",
+                elementType: "geometry",
+                stylers: {
+                  color: "#fefefe",
+                },
+              },
+              {
+                featureType: "arterial",
+                elementType: "geometry.fill",
+                stylers: {
+                  color: "#fefefe",
+                },
+              },
+              {
+                featureType: "poi",
+                elementType: "all",
+                stylers: {
+                  visibility: "off",
+                },
+              },
+              {
+                featureType: "green",
+                elementType: "all",
+                stylers: {
+                  visibility: "off",
+                },
+              },
+              {
+                featureType: "subway",
+                elementType: "all",
+                stylers: {
+                  visibility: "off",
+                },
+              },
+              {
+                featureType: "manmade",
+                elementType: "all",
+                stylers: {
+                  color: "#d1d1d1",
+                },
+              },
+              {
+                featureType: "local",
+                elementType: "all",
+                stylers: {
+                  color: "#d1d1d1",
+                },
+              },
+              {
+                featureType: "arterial",
+                elementType: "labels",
+                stylers: {
+                  visibility: "off",
+                },
+              },
+              {
+                featureType: "boundary",
+                elementType: "all",
+                stylers: {
+                  color: "#999999",
+                },
+              },
+              {
+                featureType: "building",
+                elementType: "all",
+                stylers: {
+                  color: "#d1d1d1",
+                },
+              },
+              {
+                featureType: "label",
+                elementType: "labels.text.fill",
+                stylers: {
+                  color: "#999999",
+                },
+              },
+            ],
+          },
+        },
+        series: [
+          {
+            type: "scatter",
+            coordinateSystem: "bmap",
+            data: convertData(this.deviceList, 1),
+            symbolSize: 15,
+            itemStyle: {
+              color: "#E6A23C",
+            },
+          },
+          {
+            type: "scatter",
+            coordinateSystem: "bmap",
+            data: convertData(this.deviceList, 2),
+            symbolSize: 15,
+            itemStyle: {
+              color: "#F56C6C",
+            },
+          },
+          {
+            type: "scatter",
+            coordinateSystem: "bmap",
+            data: convertData(this.deviceList, 4),
+            symbolSize: 15,
+            itemStyle: {
+              color: "#909399",
+            },
+          },
+          {
+            type: "effectScatter",
+            coordinateSystem: "bmap",
+            data: convertData(this.deviceList, 3),
+            symbolSize: 15,
+            showEffectOn: "render",
+            rippleEffect: {
+              brushType: "stroke",
+              scale: 5,
+            },
+            label: {
+              formatter: "{b}",
+              position: "right",
+              show: false,
+            },
+            itemStyle: {
+              color: "#67C23A",
+              shadowBlur: 100,
+              shadowColor: "#333",
+            },
+            zlevel: 1,
+          },
+        ],
+      };
+
+      option && myChart.setOption(option);
+    },
     //设备统计
     async StatisticsInit() {
       try {
@@ -361,18 +685,31 @@ export default {
         console.log(error);
       }
     },
-    //Mqtt统计数据
+    //Mqtt统计指标数据
     async MetriceInit() {
-      // try {
-      //   let { code, data } = await this.$api.getMetriceList();
-      //   if (+code !== 0) {
-      //     this.$message.error("网络错误，请稍后再试~");
-      //     return;
-      //   }
-      //   this.MetriceList = data[0].metrics;
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      try {
+        let { code, data } = await this.$api.getMetriceList();
+        if (+code !== 0) {
+          this.$message.error("网络错误，请稍后再试~");
+          return;
+        }
+        this.MetriceList = data[0].metrics;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    //Mqtt状态数据
+    async DescriptionsInit() {
+      try {
+        let { code, data } = await this.$api.getstatsList();
+        if (+code !== 0) {
+          this.$message.error("网络错误，请稍后再试~");
+          return;
+        }
+        this.StatsList = data[0].stats;
+      } catch (error) {
+        console.log(error);
+      }
     },
     //mqtt条形图
     MqttInit() {
@@ -414,12 +751,26 @@ export default {
           {
             name: "当前数量",
             type: "bar",
-            data: [37, 37, 245, 1209, 245, 13],
+            data: [
+              this.StatsList["connections.count"],
+              this.StatsList["channels.count"],
+              this.StatsList["topics.count"],
+              this.StatsList["subscriptions.count"],
+              this.StatsList["routes.count"],
+              this.StatsList["retained.count"],
+            ],
           },
           {
             name: "历史最大数",
             type: "bar",
-            data: [273, 273, 669, 16132, 669, 14],
+            data: [
+              this.StatsList["connections.max"],
+              this.StatsList["channels.max"],
+              this.StatsList["topics.max"],
+              this.StatsList["subscriptions.max"],
+              this.StatsList["routes.max"],
+              this.StatsList["retained.max"],
+            ],
           },
         ],
       };
@@ -452,6 +803,7 @@ export default {
       }
       this.deviceList = rows;
       this.deviceCount = total;
+      this.loadMap();
     },
     //cpu饼图
     CpuInit() {
@@ -636,8 +988,14 @@ export default {
     // },
     format(value) {
       //value必须为数字
-      return Number(value).toLocaleString();
+      if (typeof value !== "number") return;
+      return value.toLocaleString();
     },
+    // format(value) {
+    //   let reg = /\d{1,3}(?=(\d{3})+$)/g;
+    //   let text = String(value);
+    //   return text.replace(reg, "$&,");
+    // },
   },
 };
 </script>
@@ -651,7 +1009,7 @@ export default {
 .map {
   width: 100%;
   height: 650px;
-  background-color: pink;
+  // background-color: pink;
 }
 
 .homepageTopR {
@@ -770,7 +1128,7 @@ export default {
   .el-icon-time {
     font-size: 14px;
   }
-.el-tag {
+  .el-tag {
     color: #fff;
     margin-right: 5px;
   }
@@ -826,8 +1184,8 @@ export default {
   width: 100%;
   height: 170px;
 }
-.el-dialog{
-  .el-tag{
+.el-dialog {
+  .el-tag {
     color: #fff;
     margin-right: 10px;
   }

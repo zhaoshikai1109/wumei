@@ -40,18 +40,20 @@
         </el-dropdown-menu>
       </el-dropdown>
       <!-- 用户头像 -->
-      <el-dropdown trigger="click" >
+      <el-dropdown trigger="click" @command="handleCommand">
         <div class="head-portraits">
           <img
-            src="https://iot.wumei.live/prod-api/profile/avatar/2022/09/16/be6e2b59-c630-4e04-b4d7-1fd55f4066b8.jpeg"
+            :src="`https://iot.wumei.live/prod-api${this.avatarUrl}`"
             alt=""
           />
           <i class="el-icon-caret-bottom"></i>
         </div>
 
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item @click="signout">退出登录</el-dropdown-item>
+          <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+          <el-dropdown-item divided command="signout"
+            >退出登录</el-dropdown-item
+          >
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -59,7 +61,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapActions, mapState } from "vuex";
 import _ from "../assets/utils";
 export default {
   name: "CommonHeader",
@@ -69,26 +71,42 @@ export default {
     };
   },
   computed: {
-    ...mapState(["isCollapse"]),
+    ...mapState(["isCollapse", "avatarUrl"]),
   },
 
   methods: {
-    ...mapMutations(["setProfile"]),
+    ...mapMutations(["collapseMenu"]),
+    ...mapActions(["setProfileAsync"]),
     //点击展开侧边栏
     handleMenu() {
-      this.$store.commit("collapseMenu");
+     this.collapseMenu()
     },
     show() {
       this.display = !this.display;
+    },
+    //头像下拉点击
+    handleCommand(command) {
+      if (command == "signout") {
+        this.signout();
+      }
+      if (command === "profile") {
+        this.goCenter();
+      }
     },
     //退出登录
     signout() {
       //清除Token&清除vuex存储的登录者信息
       _.storage.remove("token");
-      this.setProfile(null);
+      this.setProfileAsync(null);
       //跳转提示
       this.$message.success("您已安全退出");
       this.$router.push("/login");
+    },
+    //个人中心
+    goCenter() {
+      this.$router.push({
+        path: "/profile",
+      });
     },
   },
 };

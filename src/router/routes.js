@@ -29,11 +29,21 @@ const routes = [
         component: () => import("../views/HomePage.vue"),
       },
       {
+        path: "profile",
+        name: "profile",
+        meta: {
+          title: "个人中心",
+          hidden: true,
+        },
+        component: () => import("../views/Profile/Profile.vue"),
+      },
+      {
         path: "iot",
         name: "iot",
         meta: {
           title: "物联网",
           icon: "el-icon-eleme",
+          role:"iot:news:add"
         },
         component: () => import("../views/Iot/Iot.vue"),
         children: [
@@ -42,6 +52,7 @@ const routes = [
             name: "template",
             meta: {
               title: "通用物模型",
+              role:"iot:template:list"
             },
             component: () => import("../views/Iot/Template.vue"),
           },
@@ -50,6 +61,7 @@ const routes = [
             name: "category",
             meta: {
               title: "产品分类",
+              role:"iot:category:list"
             },
             component: () => import("../views/Iot/Category.vue"),
           },
@@ -58,14 +70,26 @@ const routes = [
             name: "product",
             meta: {
               title: "产品管理",
+              role:"iot:product:list"
             },
             component: () => import("../views/Iot/Product.vue"),
+          },
+          {
+            path: "product-edit",
+            
+            meta: {
+              title: "编辑产品",
+              hidden: true,
+              role:""
+            },
+            component: () => import("../views/Iot/ProductEdit.vue"),
           },
           {
             path: "firmware",
             name: "firmware",
             meta: {
               title: "产品固件",
+              role:"iot:firmware:list"
             },
             component: () => import("../views/Iot/Firmware.vue"),
           },
@@ -74,6 +98,7 @@ const routes = [
             name: "group",
             meta: {
               title: "设备分组",
+              role:"iot:group:list"
             },
             component: () => import("../views/Iot/Group.vue"),
           },
@@ -82,6 +107,8 @@ const routes = [
             name: "device",
             meta: {
               title: "设备管理",
+              role:"iot:device:list"
+              
             },
             component: () => import("../views/Iot/Device.vue"),
           },
@@ -90,6 +117,7 @@ const routes = [
             name: "alertLog",
             meta: {
               title: "设备告警",
+              role:"iot:alert:list"
             },
             component: () => import("../views/Iot/AlertLog.vue"),
           },
@@ -98,6 +126,7 @@ const routes = [
             name: "clientDetails",
             meta: {
               title: "云云对接",
+              role:"iot:clientDetails:list"
             },
             component: () => import("../views/Iot/ClientDetails.vue"),
           },
@@ -107,8 +136,9 @@ const routes = [
         path: "emqx",
         name: "emqx",
         meta: {
-          title: "ENQ管理",
+          title: "EMQ管理",
           icon: "el-icon-location",
+          role:"iot:emqx:query"
         },
         component: () => import("../views/Emqx/Emqx.vue"),
         children: [
@@ -117,6 +147,7 @@ const routes = [
             name: "client",
             meta: {
               title: "客户端",
+              role:"iot:emqx:client"
             },
             component: () => import("../views/Emqx/Client.vue"),
           },
@@ -128,6 +159,7 @@ const routes = [
         meta: {
           title: "系统管理",
           icon: "el-icon-s-tools",
+          role:"system:post:list"
         },
         component: () => import("../views/System/System.vue"),
         children: [
@@ -136,6 +168,7 @@ const routes = [
             name: "user",
             meta: {
               title: "用户管理",
+              role:"system:user:list"
             },
             component: () => import("../views/System/User.vue"),
           },
@@ -144,6 +177,7 @@ const routes = [
             name: "role",
             meta: {
               title: "角色管理",
+              role:"system:role:list"
             },
             component: () => import("../views/System/Role.vue"),
           },
@@ -152,33 +186,34 @@ const routes = [
             name: "menu",
             meta: {
               title: "菜单管理",
+              role:"system:menu:list"
             },
             component: () => import("../views/System/Menu.vue"),
           },
-          {
-            path: "dept",
-            name: "dept",
-            meta: {
-              title: "部门管理",
-            },
-            component: () => import("../views/System/Dept.vue"),
-          },
-          {
-            path: "post",
-            name: "post",
-            meta: {
-              title: "岗位管理",
-            },
-            component: () => import("../views/System/Post.vue"),
-          },
-          {
-            path: "dict",
-            name: "dict",
-            meta: {
-              title: "字典管理",
-            },
-            component: () => import("../views/System/Dict.vue"),
-          },
+          // {
+          //   path: "dept",
+          //   name: "dept",
+          //   meta: {
+          //     title: "部门管理",
+          //   },
+          //   component: () => import("../views/System/Dept.vue"),
+          // },
+          // {
+          //   path: "post",
+          //   name: "post",
+          //   meta: {
+          //     title: "岗位管理",
+          //   },
+          //   component: () => import("../views/System/Post.vue"),
+          // },
+          // {
+          //   path: "dict",
+          //   name: "dict",
+          //   meta: {
+          //     title: "字典管理",
+          //   },
+          //   component: () => import("../views/System/Dict.vue"),
+          // },
         ],
       },
     ],

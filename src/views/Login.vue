@@ -222,6 +222,7 @@ export default {
           to ? this.$router.replace(to) : this.$router.push("/home");
         } else {
           this.$message.error(msg);
+          this.createImgUrl()
         }
       } catch (error) {
         console.log(error);

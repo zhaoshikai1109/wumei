@@ -4,6 +4,8 @@ import router from "./router";
 import ElementUI from "element-ui";
 import "@/assets/reset.min.css";
 import "element-ui/lib/theme-chalk/index.css";
+import "./directive"
+
 import store from "./store/index";
 import api from "./api";
 import * as echarts from "echarts";
