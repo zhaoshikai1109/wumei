@@ -161,11 +161,12 @@
                   </el-option>
                 </el-select>
               </el-descriptions-item>
-              <el-descriptions-item v-if="item.stringList[0]" >
-                <template slot="label" > {{ item.stringList[0].name }} </template>
+              <el-descriptions-item v-if="item.stringList[0]">
+                <template slot="label">
+                  {{ item.stringList[0].name }}
+                </template>
                 <el-input disabled :placeholder="item.stringList[0].value">
                 </el-input>
-               
               </el-descriptions-item>
             </el-descriptions>
             <div class="footer">
@@ -440,8 +441,7 @@ export default {
   font-weight: 700;
 }
 .el-card {
-  width: 380px;
+  width: 420px;
   height: 310px;
 }
-
 </style>
